@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Like Media – Purpose</title>
+
+        <!-- Favicon for all devices -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #F9F9F9;
+            --text-dark: #111111;
+            --text-light: #333333;
+            --accent: #C4A484;
+            --white: #FFFFFF;
+            --transition: all 0.3s ease;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-light); line-height: 1.6; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 400; color: var(--text-dark); }
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        a { text-decoration: none; color: inherit; }
+
+        /* Navigation */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 1000; padding: 1rem 0;
+        }
+        .nav-container {
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 1200px; margin: 0 auto; padding: 0 20px;
+        }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--text-dark); }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { font-weight: 400; transition: var(--transition); border-bottom: 2px solid transparent; padding-bottom: 4px; }
+        .nav-links a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+        .hamburger { display: none; font-size: 1.5rem; cursor: pointer; }
+
+        /* Back button – mobile with visibility */
+        .back-btn {
+    display: none;
+    font-size: 1.5rem;
+    margin-right: 10px;
+    cursor: pointer;
+    color: var(--text-dark);
+}
+@media (max-width: 768px) {
+    .back-btn {
+        display: inline-block;
+    }
+}
+
+        /* Page Header */
+        .page-header { margin-top: 120px; text-align: center; padding: 40px 20px; background: var(--white); border-bottom: 1px solid #eee; }
+        .page-header h2 { margin-bottom: 0.5rem; }
+        .page-header p { max-width: 600px; margin: 0 auto; color: #666; }
+
+        /* Events */
+        .events { padding: 60px 0; }
+        .event { margin-bottom: 80px; }
+        .event:last-child { margin-bottom: 0; }
+        .event h3 { font-size: 2rem; margin-bottom: 10px; text-align: center; }
+        .event-desc { text-align: center; max-width: 700px; margin: 0 auto 30px; color: #666; }
+        .event-gallery {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+            max-width: 800px; margin: 0 auto;
+        }
+        .gallery-item {
+            position: relative; overflow: hidden; cursor: pointer; border-radius: 4px;
+            aspect-ratio: 1 / 1; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+        .gallery-item:hover img { transform: scale(1.05); }
+        .gallery-item .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.3); opacity: 0; transition: opacity 0.3s;
+            display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;
+        }
+        .gallery-item:hover .overlay { opacity: 1; }
+
+        /* Lightbox Modal */
+        .modal { display: none; position: fixed; z-index: 2000; padding-top: 60px; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.9); }
+        .modal-content { margin: auto; display: block; max-width: 80%; max-height: 80%; }
+        .close { position: absolute; top: 30px; right: 40px; color: #f1f1f1; font-size: 40px; font-weight: bold; cursor: pointer; }
+        .close:hover { color: var(--accent); }
+
+        /* Footer */
+        footer { background: var(--white); padding: 60px 0 30px; border-top: 1px solid #eee; margin-top: 60px; }
+        .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-bottom: 40px; }
+        .footer-col h4 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 1.5rem; color: var(--text-dark); }
+        .footer-col p, .footer-col a { color: #666; font-size: 0.95rem; line-height: 1.8; }
+        .footer-col i { margin-right: 10px; color: var(--accent); }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: 'Inter', sans-serif; }
+        .contact-form button { background: var(--text-dark); color: white; border: none; padding: 12px 20px; cursor: pointer; transition: var(--transition); border-radius: 4px; width: 100%; font-weight: 600; }
+        .contact-form button:hover { background: var(--accent); }
+        .social-links { margin-top: 20px; }
+        .social-links a { display: inline-block; margin-right: 15px; font-size: 1.4rem; color: #333; transition: var(--transition); }
+        .social-links a:hover { color: var(--accent); }
+        .instagram-feed { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .instagram-feed img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px; }
+        .copyright { text-align: center; padding-top: 30px; border-top: 1px solid #eee; color: #999; font-size: 0.9rem; }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed; top: 80px; left: -100%; width: 100%; height: calc(100vh - 80px);
+                background: var(--white); flex-direction: column; align-items: center; justify-content: center;
+                gap: 2rem; transition: left 0.3s;
+            }
+            .nav-links.active { left: 0; }
+            .hamburger { display: block; }
+            .event-gallery { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+
+        /* -----------------------------------------------
+   NEW FOOTER STYLES (minimalistic, matching brand)
+----------------------------------------------- */
+.footer {
+    background-color: #111111; /* dark background – elegant */
+    color: #f0f0f0;
+    padding: 60px 0 30px;
+    font-family: 'Inter', sans-serif;
+    border-top: none;
+}
+
+.footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Brand area (logo + tagline) */
+.footer-brand {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.footer-logo-link {
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.footer-logo {
+    max-height: 50px;
+    width: auto;
+    filter: brightness(0) invert(1); /* logo dark background ekata white widiyata penwanna */
+}
+
+.footer-tagline {
+    font-size: 1rem;
+    color: #aaa;
+    letter-spacing: 1px;
+    font-weight: 300;
+}
+
+/* Footer links grid (3 columns) */
+.footer-links {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 40px;
+}
+
+.link-col h4 {
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+.link-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.link-col ul li {
+    margin-bottom: 12px;
+}
+
+.link-col ul li a {
+    color: #bbb;
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.link-col ul li a:hover {
+    color: var(--accent, #C4A484);
+}
+
+/* Social icons row */
+.footer-social {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #222;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.footer-social a:hover {
+    background-color: var(--accent, #C4A484);
+    color: #111;
+    transform: translateY(-3px);
+}
+
+/* Copyright area */
+.footer-copyright {
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.footer-copyright p {
+    margin: 5px 0;
+}
+
+.legal-links a {
+    color: #888;
+    text-decoration: none;
+    margin: 0 5px;
+    transition: color 0.2s;
+}
+
+.legal-links a:hover {
+    color: var(--accent, #C4A484);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-links {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+    .footer-social {
+        flex-wrap: wrap;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <nav>
+    <div class="nav-container">
+        <span class="back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></span>
+        <div class="logo">I Like Media</div>
+        <div class="hamburger"><i class="fas fa-bars"></i></div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="scene.html">The Scene</a>
+            <a href="style.html">Style & Living</a>
+            <a href="purpose.html">Purpose</a>
+            <a href="little.html">Little Worlds</a>
+            <a href="index.html#contact">Contact</a>
+        </div>
+    </div>
+</nav>
+
+    <div class="page-header">
+        <h2>Purpose</h2>
+        <p>The heart of the event – keynote speeches, award ceremonies, and the moments that matter.</p>
+    </div>
+
+    <section class="events container">
+        <!-- Event 1: Leadership Conference -->
+        <div class="event">
+            <h3>Leadership Conference 2025</h3>
+            <p class="event-desc">Inspiring talks from industry leaders, standing ovations, and the exchange of ideas.</p>
+            <div class="event-gallery">
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Purpose 1" loading="lazy">
+                    <div class="overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Purpose 2" loading="lazy">
+                    <div class="overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Purpose 3" loading="lazy">
+                    <div class="overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Purpose 4" loading="lazy">
+                    <div class="overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event 2: Annual Awards Gala -->
+        <div class="event">
+            <h3>Annual Awards Gala</h3>
+            <p class="event-desc">Celebrating excellence – emotional acceptances, trophy moments, and applause.</p>
+            <div class="event-gallery">
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1528605248644-14dd04022da1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Awards 1" loading="lazy">
+                    <div class="overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Awards 2" loading="lazy">
+                    <div class="overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Awards 3" loading="lazy">
+                    <div class="overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+                <div class="gallery-item" data-src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Awards 4" loading="lazy">
+                    <div class="overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============= NEW FOOTER (I Like Media) ============= -->
+<footer class="footer" id="footer">
+    <div class="container">
+        <!-- Top: Logo + Tagline (Centered) -->
+        <div class="footer-brand">
+            <a href="#home" class="footer-logo-link">
+                <!-- oyalage logo eka me thanata danna -->
+                <img src="images/Logo/ILike/ILM W.png" alt="I Like Media Logo" class="footer-logo">
+            </a>
+            <p class="footer-tagline">Elevate Your Image. Define Your Brand.</p>
+        </div>
+
+        <!-- Middle: Quick Links (3 columns) -->
+        <div class="footer-links">
+            <div class="link-col">
+                <h4>Explore</h4>
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="link-col">
+                <h4>Our Family</h4>
+                <ul>
+                    <li><a href="https://www.peakmomentslifestyle.com" target="_blank">Peak Moments Lifestyle</a></li>
+                    <li><a href="https://www.peakmomentsbyrumesh.com" target="_blank">Peak Moments by Rumesh</a></li>
+                </ul>
+            </div>
+            <div class="link-col">
+                <h4>Connect</h4>
+                <ul>
+                    <li><a href="mailto:peakmomentsbyrumesh@gmail.com">Email</a></li>
+                    <li><a href="tel:+94768782913">+94 76 878 2913</a></li>
+                    <li><a href="https://maps.app.goo.gl/i5gQUtCCggZ5Kndv5" target="_blank">Location</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom: Social Icons + Copyright -->
+        <div class="footer-social">
+            <a href="https://www.instagram.com/i_like_media" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/ILikeMediaOfficial" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.tiktok.com/@i_like_media_" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="https://youtube.com/@ilikemediaagency" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.linkedin.com/company/i-like-media" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+
+        <div class="footer-copyright">
+            <p>© 2024 I Like Media. All rights reserved.</p>
+            <p class="legal-links">
+                <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="/sitemap.xml">Sitemap</a>
+            </p>
+        </div>
+    </div>
+</footer>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox-modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modal-img">
+    </div>
+
+    <script>
+        // Mobile menu
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        hamburger.addEventListener('click', () => navLinks.classList.toggle('active'));
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => navLinks.classList.remove('active'));
+        });
+
+        // Lightbox
+        const modal = document.getElementById('lightbox-modal');
+        const modalImg = document.getElementById('modal-img');
+        const closeBtn = document.querySelector('.close');
+
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', function() {
+                modal.style.display = 'block';
+                modalImg.src = this.dataset.src;
+            });
+        });
+
+        closeBtn.addEventListener('click', () => modal.style.display = 'none');
+        window.addEventListener('click', (e) => { if (e.target === modal) modal.style.display = 'none'; });
+    </script>
+</body>
+</html>
